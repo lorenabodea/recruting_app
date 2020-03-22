@@ -1,5 +1,5 @@
 'use strict';
-var dbConn = require('./../../config/db.config');
+var dbConn = require('../../config/db.config');
 //Recruit object create
 var Recruit = function (recruit) {
   this.first_name = recruit.first_name;

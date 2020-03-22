@@ -1,8 +1,11 @@
 'use strict';
 const Recruit = require('../models/recruit.model');
-const multiparty = require('multiparty');
-var http = require('http');
-var util = require('util');
+const Certificate = require('../models/certificate.model');
+const Job = require('../models/job.model');
+const Language = require('../models/language.model');
+const SchoolInstitution = require('../models/school_institution.model');
+const userFiles = 'src/public/images/profiles/';
+const fs = require('fs');
 
 exports.findAll = function (req, res) {
   Recruit.findAll(function (err, recruit) {
@@ -15,34 +18,116 @@ exports.findAll = function (req, res) {
 };
 
 exports.create = function (req, res) {
-  let form = new multiparty.Form();
-  //   form.parse(req, function(err, fields, files) {
-  //     // Object.values(fields).forEach(function(name) {
-  //     //      console.log('got field named ' + name);
-  //     //  });
+  console.log('intra aici');
+  console.log(req.body);
+  const file = req.body.photo;
+  console.log(req.body.photo);
 
-  //      res.writeHead(200, {'content-type': 'text/plain'});
-  //      res.write('received upload:\n\n');
-  //      res.end(util.inspect({fields: fields, files: files}));
-  //      const new_recruit = new Recruit(fields);
-  //      Recruit.create(new_recruit, function(err, recruit) {
-  //   if (err)
-  //   res.send(err);
-  //   res.json({error:false,message:"Recruit added successfully!",data:recruit});
-  // });
-
-  //  });
-  const new_recruit = new Recruit(req.body);
-  //handles null error
+ //handles null error
   if (req.body.constructor === Object && Object.keys(req.body).length === 0) {
-    console.log(req.body)
     res.status(400).send({ error: true, message: 'Please provide all required field' });
   } else {
-    Recruit.create(new_recruit, function (err, recruit) {
-      if (err)
-        res.send(err);
-      res.json({ error: false, message: "Recruit added successfully!", data: recruit });
+    // const file = req.files.photo;
+    // const img_name = file.name;
+    const new_recruit = new Recruit({
+      first_name: req.body.firstname,
+      last_name: req.body.lastname,
+      email: req.body.email,
+      phone: req.body.phone,
+      birthday: req.body.birthday,
+      photo: req.body.photo
     });
+
+    Recruit.create(new_recruit, function (err, recruit) {
+      if (err) {
+        res.send(err);
+      }
+      //add languages
+      for( let count = 0;  count<req.body.languages.length; count++) {
+        const language = new Language({
+          language: req.body.languages[count].language,
+          user_id: recruit
+        });
+
+        Language.create(language, function (err, lang) {
+          if (err) {
+            res.send(err);
+          }
+        });
+      }
+      //add certificates
+      for( let count = 0;  count<req.body.certificates.length; count++) {
+        const certificate = new Certificate({
+          certificate: req.body.certificates[count].certificate,
+          user_id: recruit
+        });
+
+        Certificate.create(certificate, function (err, certificate) {
+          if (err) {
+            res.send(err);
+          }
+        });
+      }
+ 
+    //add job experience
+    for( let count = 0;  count<req.body.jobs.length; count++) {
+      const job = new Job({
+        position: req.body.jobs[count].job,
+        from_year: req.body.jobs[count].fromJob,
+        to_year: req.body.jobs[count].toJob,
+        user_id: recruit
+      });
+
+      Job.create(job, function (err, job) {
+        if (err) {
+          res.send(err);
+        }
+      });
+    }
+    //add schools
+    for( let count = 0;  count<req.body.institutions.length; count++) {
+      const institution = new SchoolInstitution({
+        name: req.body.institutions[count].institution,
+        from_year: req.body.institutions[count].from,
+        to_year: req.body.institutions[count].to,
+        user_id: recruit
+      });
+
+      SchoolInstitution.create(institution, function (err, school) {
+        if (err) {
+          res.send(err);
+        }
+      });
+    }
+  });
+
+    // if(file.mimetype == "image/jpeg" ||file.mimetype == "image/png") {
+    //   file.mv('src/public/images/profiles/'+file.name, function(err) {
+    //     if(err) {
+    //       return res.status(500).send(err);
+    //     }
+
+    //     const new_recruit = new Recruit({
+    //       first_name: req.body.first_name,
+    //       last_name: req.body.last_name,
+    //       email: req.body.email,
+    //       phone: req.body.phone,
+    //       birthday: req.body.birthday,
+    //       photo: img_name
+    //     });
+
+    //     Recruit.create(new_recruit, function (err, recruit) {
+    //       if (err) {
+    //         res.send(err);
+    //       }
+    //      // res.json({ error: false, message: "Recruit added successfully!", data: recruit });
+    //     }).then(()=> {
+
+    //     });
+    //   });
+    // } else {
+    //   res.json({ error: false, message: "This format is not allowed , please upload file with '.png', jpg"});
+    // }
   }
 };
 
