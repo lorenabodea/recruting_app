@@ -24,9 +24,15 @@ app.get('/', (req, res) => {
 // Require recruit routes
 const recruitRoutes = require('./src/routes/recruit.routes');
 const certificateRoutes = require('./src/routes/certificate.routes');
+const jobRoutes = require('./src/routes/job.route');
+const languageRoutes = require('./src/routes/language.route');
+const school_institutionRoutes = require('./src/routes/school_institutution.route');
 // using as middleware
 app.use('/api/v1/recruits', recruitRoutes);
 app.use('/api/v1/certificates', certificateRoutes)
+app.use('/api/v1/jobs', jobRoutes)
+app.use('/api/v1/languages', languageRoutes)
+app.use('/api/v1/school_institutions', school_institutionRoutes)
 // listen for requests
 app.listen(port, () => {
   console.log(`Server is listening on port ${port}`);

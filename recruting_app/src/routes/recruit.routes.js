@@ -11,4 +11,8 @@ router.get('/:id', recruitController.findById);
 router.put('/:id', recruitController.update);
 // Delete a recruit with id
 router.delete('/:id', recruitController.delete);
+//set as favourite
+router.put('/setfavourite/:id', recruitController.setFavourite);
+//remove from favourite
+router.put('/removefavourite/:id', recruitController.removeFavourite);
 module.exports = router

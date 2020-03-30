@@ -6,7 +6,7 @@ var Certificate = function (certificate) {
     this.user_id = certificate.user_id
 }
 
-Certificate.create = new Promise(function (newCertificate, result) {
+Certificate.create = function (newCertificate, result) {
   dbConn.query("INSERT INTO certificates set ?", newCertificate, function (err, res) {
     if (err) {
       console.log("error: ", err);
@@ -16,7 +16,7 @@ Certificate.create = new Promise(function (newCertificate, result) {
       result(null, res.insertId);
     }
   });
-});
+};
 
 Certificate.findByUserId = function (userId, result) {
   dbConn.query("Select * from certificates where user_id = ? ", userId, function (err, res) {

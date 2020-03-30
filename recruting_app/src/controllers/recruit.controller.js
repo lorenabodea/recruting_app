@@ -14,7 +14,7 @@ exports.findAll = function (req, res) {
       res.send(err);
     console.log('res', recruit);
     res.send(recruit);
-  });
+  })
 };
 
 exports.create = function (req, res) {
@@ -35,7 +35,8 @@ exports.create = function (req, res) {
       email: req.body.email,
       phone: req.body.phone,
       birthday: req.body.birthday,
-      photo: req.body.photo
+      photo: req.body.photo,
+      favourite: 0
     });
 
     Recruit.create(new_recruit, function (err, recruit) {
@@ -156,5 +157,21 @@ exports.delete = function (req, res) {
     if (err)
       res.send(err);
     res.json({ error: false, message: 'Recruit successfully deleted' });
+  });
+};
+
+exports.setFavourite = function (req, res) {
+  Recruit.setFavourite(req.params.id, function (err, recruit) {
+    if (err)
+      res.send(err);
+    res.json({ error: false, message: 'Recruit successfully set as favourilte' });
+  });
+};
+
+exports.removeFavourite = function (req, res) {
+  Recruit.removeFavourite(req.params.id, function (err, recruit) {
+    if (err)
+      res.send(err);
+    res.json({ error: false, message: 'Recruit successfully removed from favourite' });
   });
 };
