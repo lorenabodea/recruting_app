@@ -1,0 +1,107 @@
+<h1 class="form-title">Creare cont</h1>
+
+<form [formGroup]="productForm" (ngSubmit)="onSubmit(productForm.value)">
+    <div fxFlexOffset="20px" fxLayoutGap="20px">
+        <div>
+            <mat-form-field class="example-full-width">
+                <mat-label>Prenume</mat-label>
+                <input formControlName="firstname" matInput type="text" >
+              </mat-form-field>
+        </div>
+        <div>
+            <mat-form-field class="example-full-width">
+                <mat-label>Nume</mat-label>
+                <input formControlName="lastname" matInput type="text" >
+              </mat-form-field>
+        </div>
+         <div>
+            <mat-form-field class="example-full-width">
+                <mat-label>Email</mat-label>
+                <input formControlName="email" matInput type="text" >
+              </mat-form-field>
+         </div>
+          <div>
+             <mat-form-field class="example-full-width">
+                <mat-label>Telefon</mat-label>
+                <input formControlName="phone" matInput type="text" >
+              </mat-form-field>
+          </div>
+          <div fxLayout="row">
+            <mat-form-field>
+                <mat-label>Data nasterii</mat-label>
+                <input matInput [matDatepicker]="picker">
+                <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                <mat-datepicker #picker></mat-datepicker>
+              </mat-form-field>
+          </div>
+          <label class="image-upload-container btn btn-bwm">
+            <span>Select Image</span>
+            <input #imageInput
+                   formControlName="photo"
+                   type="file" 
+                   accept="image/*"
+                   (change)="uploadFile($event)">
+          </label>
+          <h2>Educatie</h2>
+          <div formArrayName="institutions">
+            <div fxLayoutGap="10px" *ngFor="let item of institutions.controls; let pointIndex=index, let first=first" [formGroupName]="pointIndex">
+              <mat-form-field class="example-full-width">
+                <mat-label>Institutie</mat-label>
+                <input formControlName="institution" matInput type="text" >
+              </mat-form-field>
+              <mat-form-field class="example-full-width">
+                <mat-label>Din anul: </mat-label>
+                <input formControlName="from" matInput type="text" >
+              </mat-form-field>
+              <mat-form-field class="example-full-width">
+                <mat-label>Pana in anul:</mat-label>
+                <input formControlName="to" matInput type="text" >
+              </mat-form-field>
+            <button type="button" *ngIf="!first" mat-stroked-button color="warn" (click)="deleteInstitution(pointIndex)"> - Sterge institutie</button>
+            </div>
+            <button type="button" mat-stroked-button color="primary" (click)="addInstitution()"> + Adauga institutie</button>
+          </div>
+          <h2>Locuri de munca</h2>
+          <div formArrayName="jobs">
+            <div fxLayoutGap="10px" *ngFor="let item of jobs.controls; let jobIndex=index, let first=first" [formGroupName]="jobIndex">
+              <mat-form-field class="example-full-width">
+                <mat-label>Job</mat-label>
+                <input formControlName="job" matInput type="text" >
+              </mat-form-field>
+              <mat-form-field class="example-full-width">
+                <mat-label>Din anul: </mat-label>
+                <input formControlName="fromJob" matInput type="text" >
+              </mat-form-field>
+              <mat-form-field class="example-full-width">
+                <mat-label>Pana in anul:</mat-label>
+                <input formControlName="toJob" matInput type="text" >
+              </mat-form-field>
+            <button type="button" *ngIf="!first" mat-stroked-button color="warn" (click)="deleteJob(jobIndex)"> - Sterge job</button>
+            </div>
+            <button type="button" mat-stroked-button color="primary" (click)="addJob()"> + Adauga job</button>
+          </div>
+          <h2>Certificari</h2>
+          <div formArrayName="certificates">
+            <div fxLayoutGap="10px" *ngFor="let item of certificates.controls; let certificateIndex=index, let first=first" [formGroupName]="certificateIndex">
+              <mat-form-field class="example-full-width">
+                <mat-label>Denumire</mat-label>
+                <input formControlName="certificate" matInput type="text" >
+              </mat-form-field>
+            <button type="button" *ngIf="!first" mat-stroked-button color="warn" (click)="deleteCertificate(certificateIndex)"> - Sterge certificat</button>
+            </div>
+            <button type="button" mat-stroked-button color="primary" (click)="addCertificate()"> + Adauga certificat</button>
+          </div>
+          <h2>Limbi straine</h2>
+          <div formArrayName="languages">
+            <div fxLayoutGap="10px" *ngFor="let item of languages.controls; let languageIndex=index, let first=first" [formGroupName]="languageIndex">
+              <mat-form-field class="example-full-width">
+                <mat-label>Limba</mat-label>
+                <input formControlName="language" matInput type="text" >
+              </mat-form-field>
+            <button type="button" *ngIf="!first" mat-stroked-button color="warn" (click)="deleteLanguage(languageIndex)"> - Sterge certificat</button>
+            </div>
+            <button type="button" mat-stroked-button color="primary" (click)="addLanguage()"> + Adauga certificat</button>
+          </div>
+          <button class="button" mat-raised-button color="primary" type="submit">Trimite</button>
+    </div>
+</form>

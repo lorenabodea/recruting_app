@@ -1,0 +1,50 @@
+<h2 fxLayoutAlign="space-around" mat-dialog-title>{{recruit.firstName}}</h2>
+<mat-dialog-content>
+  <div fxLayout="column">
+    <div>Date de contact</div>
+    <div fxLayout="row" fxLayoutGap="10px" class="form-field">
+      <div>Email: </div>
+      <div class="email" (click)="mailTo()">{{recruit.email}}</div>
+    </div>
+    <div fxLayout="row" fxLayoutGap="10px" class="form-field">
+      <div>Telefon: </div>
+      <div>{{recruit.phone}}</div>
+    </div>
+    <div>Educatie</div>
+    <div *ngFor="let school of recruit.schoolInstitutions">
+      <div fxLayout="space-around" fxLayoutGap="10px">
+        <div class="timeline" fxLayout="column" fxLayoutGap="2px">
+          <div>{{school.from_year}}</div>
+          <div>{{school.to_year}}</div>
+        </div>
+        <div class="shift-block" fxLayout="stretch"></div>
+        <div fxLayout="column" fxLayoutGap="2px">
+        </div> {{school.name}}
+      </div>
+    </div>
+    <div>Experienta</div>
+    <div *ngFor="let job of recruit.jobs">
+      <div fxLayout="space-around" fxLayoutGap="10px">
+        <div class="timeline" fxLayout="column" fxLayoutGap="2px">
+          <div>{{job.from_year}}</div>
+          <div>{{job.to_year}}</div>
+        </div>
+        <div class="shift-block" fxLayout="stretch"></div>
+        <div fxLayout="column" fxLayoutGap="2px">
+        </div> {{job.position}}
+      </div>
+    </div>
+  </div>
+  <div>Limbi cunoscute:</div>
+  <div *ngFor="let language of recruit.languages">
+    <div>{{language.language}}</div>
+  </div>
+  <div>Certificari:</div>
+  <div *ngFor="let certificate of recruit.certificates">
+    <div>{{certificate.certificate}}</div>
+  </div>
+</mat-dialog-content>
+<mat-dialog-actions>
+  <button mat-button mat-dialog-close>Cancel</button>
+  <app-favourite-button [selected]="recruit.favourite"></app-favourite-button>
+</mat-dialog-actions>

@@ -1,0 +1,12 @@
+
+<div fxFlexOffset="4" fxLayout="column">
+    <div fxLayout="row" fxLayoutAlign="space-between center" class="header">
+        <div fxFlexOffset="2">Hi, Lorena</div>
+        <div class="header-company">ORTEC</div>
+    </div>
+    <div fxFlexOffset="10" class="parent"  fxLayout="row wrap"  fxLayoutAlign="space-around center">
+        <div  class="user-card"  fxFlex="1 0 21%"  *ngFor="let rectruit of recruits; let index=index">
+            <app-user-card [recruit]=recruits[index] (click)="openDialog(recruits[index])" ></app-user-card>
+        </div>
+    </div>
+</div>
