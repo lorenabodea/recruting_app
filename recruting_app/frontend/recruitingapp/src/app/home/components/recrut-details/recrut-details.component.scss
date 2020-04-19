@@ -1,3 +1,7 @@
+.body{
+    color: black;
+}
+
 .email {
     cursor: pointer;
 }
@@ -8,7 +12,18 @@
 
 .shift-block{
     width: 4px;
-    background-color: red;
+    background-color: #41BE7D;
     margin-right: 8px;
     border-radius: 0 0 18px 18px
 }
+
+.field-container {
+    border-style: groove;
+    padding: 15px;
+    border-color: #41BEBC;
+}
+
+.timeline-row {
+    font-weight: 500;
+}
+

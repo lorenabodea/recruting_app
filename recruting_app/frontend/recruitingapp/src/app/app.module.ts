@@ -26,6 +26,7 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 import {MatIconModule} from '@angular/material/icon';
 import { FavouriteButtonComponent } from './home/components/recrut-details/favourite-button/favourite-button.component';
+import { LoginComponent } from './core/login/login/login.component';
 
 const firebaseConfig = {
   apiKey: 'AIzaSyCWR_39P8u2NgrZyeJAVqBrqeu04Hy_v1s',
@@ -45,7 +46,8 @@ const firebaseConfig = {
     UserCardComponent,
     RecrutDetailsComponent,
     UserInterfaceComponent,
-    FavouriteButtonComponent
+    FavouriteButtonComponent,
+    LoginComponent
   ],
   imports: [
     BrowserModule,
@@ -71,6 +73,7 @@ const firebaseConfig = {
         { path: '', redirectTo: '/home', pathMatch: 'full' },
       { path: 'home', component: HomeComponent },
       { path: 'user', component: UserInterfaceComponent },
+      { path: 'login', component: LoginComponent }
     ]),
    ],
 

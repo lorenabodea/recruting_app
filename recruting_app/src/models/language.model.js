@@ -30,4 +30,16 @@ Language.findByUserId = function (userId, result) {
     });
 };
 
+Language.findAll = function (result) {
+    dbConn.query("Select * from languages", function (err, res) {
+      if (err) {
+        console.log("error: ", err);
+        result(null, err);
+      }
+      else {
+        console.log('languages : ', res);
+        result(null, res);
+      }
+    });
+  };
 module.exports = Language;

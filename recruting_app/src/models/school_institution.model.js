@@ -32,4 +32,17 @@ School_institution.findByUserId = function (userId, result) {
     });
 };
 
+School_institution.findAll = function (result) {
+    dbConn.query("Select * from school_institutions", function (err, res) {
+      if (err) {
+        console.log("error: ", err);
+        result(null, err);
+      }
+      else {
+        console.log('school_institutions : ', res);
+        result(null, res);
+      }
+    });
+  };
+
 module.exports = School_institution;

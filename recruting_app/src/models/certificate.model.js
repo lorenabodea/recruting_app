@@ -30,4 +30,17 @@ Certificate.findByUserId = function (userId, result) {
   });
 };
 
+Certificate.findAll = function (result) {
+  dbConn.query("Select * from certificates", function (err, res) {
+    if (err) {
+      console.log("error: ", err);
+      result(null, err);
+    }
+    else {
+      console.log('languages : ', res);
+      result(null, res);
+    }
+  });
+};
+
 module.exports = Certificate;

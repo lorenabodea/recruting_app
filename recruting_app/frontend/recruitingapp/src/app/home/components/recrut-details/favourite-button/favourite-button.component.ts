@@ -1,4 +1,6 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { Recruit } from 'src/app/home/retrieve-data-service.service';
+import { FavouriteButtonService } from './favourite-button.service';
 
 @Component({
   selector: 'app-favourite-button',
@@ -7,18 +9,19 @@ import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 })
 export class FavouriteButtonComponent implements OnInit {
 
-  @Input() selected: boolean;
-  @Output() selectedChange = new EventEmitter<boolean>();
+  @Input() recruit: Recruit;
+  @Input() disabled: boolean;
+  @Output() selectedChange = new EventEmitter<number>();
 
-  constructor() { }
+  constructor(private readonly favouriteButtonService: FavouriteButtonService) { }
 
   ngOnInit() {
   }
 
   public toggleSelected() {
-    this.selected = !this.selected;
-    this.selectedChange.emit(this.selected);
-    //make function that decides which route to call  
+    this.recruit.favourite = 1 - this.recruit.favourite;
+    this.selectedChange.emit(this.recruit.favourite);
+    this.favouriteButtonService.handleFavourite(this.recruit.favourite, this.recruit.id);
   }
 
 }

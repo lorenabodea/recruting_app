@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, FormArray, FormControl } from '@angular/forms';
 import { HttpClient, HttpEvent, HttpEventType } from '@angular/common/http';
 import { Observable } from 'rxjs';
@@ -11,6 +11,9 @@ import { Observable } from 'rxjs';
 export class UserInterfaceComponent implements OnInit {
   public productForm: FormGroup;
   postId: any;
+  preview: string;
+  @ViewChild('userImage') userImage;
+  userImageFile: File;
 
   constructor(private fb: FormBuilder, private http: HttpClient) {
     this.productForm = this.fb.group({
@@ -19,11 +22,12 @@ export class UserInterfaceComponent implements OnInit {
       email: [],
       phone: [],
       birthday: [],
-      photo: [null],
+      photo: [''],
       institutions: this.fb.array([this.fb.group({ institution: '', from: '', to: '' })]),
       jobs: this.fb.array([this.fb.group({ job: '', fromJob: '', toJob: '' })]),
       certificates: this.fb.array([this.fb.group({ certificate: '' })]),
-      languages: this.fb.array([this.fb.group({ language: '' })])
+      languages: this.fb.array([this.fb.group({ language: '' })]),
+      salary: []
     });
 
   }
@@ -80,17 +84,41 @@ export class UserInterfaceComponent implements OnInit {
   }
 
   public onSubmit(formValue): void {
-    console.log(formValue);
+
+    // console.log(formData);
+
+    const image = this.userImage.nativeElement;
+    if (image.files && image.files[0]) {
+      this.userImageFile = image.files[0];
+    }
+    console.log(this.productForm.get('institutions').value)
+    const formData = new FormData();
+    formData.append('photo', this.userImageFile, this.userImageFile.name);
+    const emailUsername = this.productForm.get('email').value.split('@')[0];
+    formData.append('username', emailUsername);
+
+    // this.http.put<any>('http://localhost:5000/api/v1/recruits/' + 93, formData).subscribe(() => {
+    //   console.log("done");
+    // });
+
     this.http.post<any>('http://localhost:5000/api/v1/recruits', formValue).subscribe(data => {
-      this.postId = data.id;
-      console.log(this.postId);
+      this.postId = data;
+      this.http.put<any>('http://localhost:5000/api/v1/recruits/' + this.postId, formData).subscribe(() => {
+        console.log("done");
+      });
     });
   }
 
+
   uploadFile(event) {
-    const fileList: FileList = event.target.files;
-    const file = fileList[0];
-    console.log(file);
-    this.productForm.setValue({ photo: file });
+
+    if (event.target.files.length > 0) {
+      const file = event.target.files[0];
+      // console.log( this.productForm.get('photo'))
+      // this.productForm.get('photo');
+      //this.productForm.get('photo').setValue(file);
+    }
+
+
   }
 }

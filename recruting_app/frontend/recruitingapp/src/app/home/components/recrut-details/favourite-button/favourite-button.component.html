@@ -1,13 +1,13 @@
-<button mat-icon-button (click)="toggleSelected()">
+<button [disabled]="disabled" tabindex="-1" mat-icon-button (click)="toggleSelected()">
 
-    <mat-icon
-      *ngIf="selected"
+    <mat-icon title="remove from favourite"
+      *ngIf="recruit.favourite"
       aria-label="Example icon-button with a heart icon">
       favorite
     </mat-icon>
   
-    <mat-icon
-      *ngIf="!selected"
+    <mat-icon title="add to favourite"
+      *ngIf="!recruit.favourite"
       aria-label="Example icon-button with a heart icon">
       favorite_border
     </mat-icon>

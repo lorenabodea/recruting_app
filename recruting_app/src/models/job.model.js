@@ -32,4 +32,17 @@ Job.findByUserId = function (userId, result) {
     });
 };
 
+Job.findAll = function (result) {
+  dbConn.query("Select * from jobs", function (err, res) {
+    if (err) {
+      console.log("error: ", err);
+      result(null, err);
+    }
+    else {
+      console.log('jobs : ', res);
+      result(null, res);
+    }
+  });
+};
+
 module.exports = Job;

@@ -9,6 +9,7 @@ var Recruit = function (recruit) {
   this.birthday = new Date();
   this.photo = recruit.photo;
   this.favourite = recruit.favourite;
+  this.salary_expectation = recruit.salary_expectation;
 };
 Recruit.create = function (newRecruit, result) {
   dbConn.query("INSERT INTO recruits set ?", newRecruit, function (err, res) {
@@ -45,8 +46,8 @@ Recruit.findAll = function (result) {
     }
   });
 };
-Recruit.update = function (id, recruit, result) {
-  dbConn.query("UPDATE recruits SET first_name=?,last_name=?,email=?,phone=?,birthday=?,photo=? WHERE id = ?", [recruit.first_name, recruit.last_name, recruit.email, recruit.phone, recruit.birthday, recruit.photo, id], function (err, res) {
+Recruit.update = function (id, photo, result) {
+  dbConn.query("UPDATE recruits SET photo=? WHERE id = ?", [photo, id], function (err, res) {
     if (err) {
       console.log("error: ", err);
       result(null, err);
@@ -55,18 +56,8 @@ Recruit.update = function (id, recruit, result) {
     }
   });
 };
-Recruit.setFavourite = function (id, result) {
-  dbConn.query("UPDATE recruits SET favourite=? WHERE id = ?", [1, id], function (err, res) {
-    if (err) {
-      console.log("error: ", err);
-      result(null, err);
-    } else {
-      result(null, res);
-    }
-  });
-};
-Recruit.removeFavourite = function (id, result) {
-  dbConn.query("UPDATE recruits SET favourite=? WHERE id = ?", [0, id], function (err, res) {
+Recruit.setFavourite = function (id, value, result) {
+  dbConn.query("UPDATE recruits SET favourite=? WHERE id = ?", [value, id], function (err, res) {
     if (err) {
       console.log("error: ", err);
       result(null, err);
@@ -82,6 +73,7 @@ Recruit.delete = function (id, result) {
       result(null, err);
     }
     else {
+      console.log("deleted");
       result(null, res);
     }
   });

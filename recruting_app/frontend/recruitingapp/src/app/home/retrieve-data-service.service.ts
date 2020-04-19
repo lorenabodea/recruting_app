@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -9,57 +10,102 @@ export class RetrieveDataServiceService {
 
   constructor(private http: HttpClient) { }
 
-  public getRecruits(): Observable<any> {
-    return  this.http.get<any>('http://localhost:5000/api/v1/recruits').pipe();
-  }
 
-  public getCertificates(userId: string): Observable<any> {
-    return  this.http.get<any> ('http://localhost:5000/api/v1/certificates/' + userId).pipe();
-  }
+  recruits$: Observable<Recruit[]> = this.http.get<any>('http://localhost:5000/api/v1/recruits/').pipe(
+    map((recruits) => {
+      return recruits.map(recruit => ({
+        id: recruit['id'],
+        firstName: recruit['first_name'],
+        lastName: recruit['last_name'],
+        email: recruit['email'],
+        birthday: recruit['birthday'],
+        phone: recruit['phone'],
+        photo: recruit['photo'],
+        favourite: recruit['favourite'],
+        salary: recruit['salary_expectation']
+      }) as Recruit);
+    })
+  );
 
-  public getJobs(userId: string): Observable<any> {
-    return  this.http.get<any> ('http://localhost:5000/api/v1/jobs/' + userId).pipe();
-  }
+  jobs$ = this.http.get<Job[]>('http://localhost:5000/api/v1/jobs/').pipe(
+    map((jobs) => {
+      return jobs.map(job => ({
+        userId: job['user_id'],
+        position: job['position'],
+        fromYear: job['from_year'],
+        toYear: job['to_year']
+      }) as Job);
+    })
+  );
 
-  public getLanguages(userId: string): Observable<any> {
-    return  this.http.get<any> ('http://localhost:5000/api/v1/languages/' + userId).pipe();
-  }
+  certificates$ = this.http.get<Certificate[]>('http://localhost:5000/api/v1/certificates/').pipe(
+    map((response) => {
+      return response.map(item => ({
+        userId: item['user_id'],
+        certificate: item['certificate'],
+      }) as Certificate);
+    })
+  );
 
-  public getSchoolInstitutions(userId: string): Observable<any> {
-    return  this.http.get<any> ('http://localhost:5000/api/v1/school_institutions/' + userId).pipe();
-  }
+
+  languages$ = this.http.get<Language[]>('http://localhost:5000/api/v1/languages/').pipe(
+    map((response) => {
+      return response.map(item => ({
+        userId: item['user_id'],
+        language: item['language'],
+      }) as Language);
+    })
+  );
+
+
+  schools$ = this.http.get<SchoolInstitution[]>('http://localhost:5000/api/v1/school_institutions/').pipe(
+    map((response) => {
+      return response.map(item => ({
+        userId: item['user_id'],
+        name: item['name'],
+        fromYear: item['from_year'],
+        toYear: item['to_year']
+      }) as SchoolInstitution);
+    })
+  );
 
 }
 
 export interface Recruit {
+  id: number;
   firstName: string;
   lastName: string;
   email: string;
   phone: string;
   birthday: Date;
   photo: string;
-  favourite: boolean;
+  favourite: number;
   certificates?: Certificate[];
   jobs?: Job[];
   languages?: Language[];
   schoolInstitutions?: SchoolInstitution[];
+  salary: number;
 }
 
 export interface Certificate {
   certificate: string;
+  userId: number;
 }
 
 export interface Job {
+  userId: number;
   position: string;
   fromYear: string;
   toYear: string;
 }
 
 export interface Language {
+  userId: number;
   language: string;
 }
 
 export interface SchoolInstitution {
+  userId: number;
   name: string;
   fromYear: string;
   toYear: string;
