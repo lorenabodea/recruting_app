@@ -1,25 +1,28 @@
 import { Injectable } from '@angular/core';
 import { CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot, Router } from '@angular/router';
 
-import { AuthService} from 'src/app/core/auth/auth.service'
-import { Observable } from 'rxjs';
-import { tap, map, take } from 'rxjs/operators';
+import { AuthenticationService } from './core/auth/authentication.service';
 
 @Injectable()
 export class AuthGuard implements CanActivate {
-  constructor(private auth: AuthService, private router: Router) {}
+  constructor(private authenticationService: AuthenticationService, private router: Router) { }
 
-  canActivate(next: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean> {
+  canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot) {
+    const currentUser = this.authenticationService.currentUserValue;
+    if (currentUser) {
+      //check if route is restricted by role
+      if (route.data.roles && route.data.roles.indexOf(currentUser.role) === -1) {
+        // role not authorised so redirect to home page
+        this.router.navigate(['/login']);
+        return false;
+      }
 
-      return this.auth.user$.pipe(
-           take(1),
-           map(user => !!user), // <-- map to boolean
-           tap(loggedIn => {
-             if (!loggedIn) {
-               console.log('access denied')
-               this.router.navigate(['/login']);
-             }
-         })
-    )
+      // authorised so return true
+      return true;
+    }
+
+    // not logged in so redirect to login page with the return url
+    this.router.navigate(['/login'], { queryParams: { returnUrl: state.url } });
+    return false;
   }
 }

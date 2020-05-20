@@ -1,0 +1,16 @@
+<div class="card card-nav-tabs text-center">
+    <div class="card-header card-header-primary">
+        Add feedback for {{recruit.firstName}}&nbsp;{{recruit.lastName}}
+    </div>
+    <div class="card-body feedback-dialog">
+        <form [formGroup]="feedbackForm" (ngSubmit)="onSubmit(feedbackForm.value)">
+            <div class="form-group">
+                <label> Feedback </label>
+                <textarea formControlName="feedback" class="form-control" type="text"></textarea>
+              </div>
+              <div class="card-footer">
+                <button class="btn btn-fill btn-danger" type="submit">Trimite</button>
+              </div>
+        </form> 
+    </div>
+</div>

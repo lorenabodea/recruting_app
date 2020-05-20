@@ -1,7 +1,8 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { FormBuilder, FormGroup, FormArray, FormControl } from '@angular/forms';
+import { FormBuilder, FormGroup, FormArray, FormControl, Validators } from '@angular/forms';
 import { HttpClient, HttpEvent, HttpEventType } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-user-interface',
@@ -15,9 +16,10 @@ export class UserInterfaceComponent implements OnInit {
   @ViewChild('userImage') userImage;
   userImageFile: File;
 
-  constructor(private fb: FormBuilder, private http: HttpClient) {
+  constructor(private fb: FormBuilder, private http: HttpClient,
+    private toastr: ToastrService) {
     this.productForm = this.fb.group({
-      firstname: [],
+      firstname: ['', Validators.required],
       lastname: [],
       email: [],
       phone: [],
@@ -85,30 +87,41 @@ export class UserInterfaceComponent implements OnInit {
 
   public onSubmit(formValue): void {
 
-    // console.log(formData);
+    if (this.validateData(formValue)) {
+      const image = this.userImage.nativeElement;
+      if (image.files && image.files[0]) {
+        this.userImageFile = image.files[0];
+      }
+      const formData = new FormData();
+      formData.append('photo', this.userImageFile, this.userImageFile.name);
+      const emailUsername = this.productForm.get('email').value.split('@')[0];
+      formData.append('username', emailUsername);
 
-    const image = this.userImage.nativeElement;
-    if (image.files && image.files[0]) {
-      this.userImageFile = image.files[0];
-    }
-    console.log(this.productForm.get('institutions').value)
-    const formData = new FormData();
-    formData.append('photo', this.userImageFile, this.userImageFile.name);
-    const emailUsername = this.productForm.get('email').value.split('@')[0];
-    formData.append('username', emailUsername);
+      // this.http.put<any>('http://localhost:5000/api/v1/recruits/' + 93, formData).subscribe(() => {
+      //   console.log("done");
+      // });
 
-    // this.http.put<any>('http://localhost:5000/api/v1/recruits/' + 93, formData).subscribe(() => {
-    //   console.log("done");
-    // });
-
-    this.http.post<any>('http://localhost:5000/api/v1/recruits', formValue).subscribe(data => {
-      this.postId = data;
-      this.http.put<any>('http://localhost:5000/api/v1/recruits/' + this.postId, formData).subscribe(() => {
-        console.log("done");
+      this.http.post<any>('http://localhost:5000/api/v1/recruits', formValue).subscribe(data => {
+        this.postId = data;
+        this.http.put<any>('http://localhost:5000/api/v1/recruits/' + this.postId, formData).subscribe(() => {
+          console.log("done");
+        });
       });
-    });
+    }
+
+
   }
 
+  validateData(values) {
+    const constoptions = { positionClass:'toast-custom' };
+
+    if (values['firstname'] === '') {
+      this.toastr.success('Numele trebuie completat', 'Camp obligatoriu')
+      return 0;
+    }
+
+    return 1;
+  }
 
   uploadFile(event) {
 

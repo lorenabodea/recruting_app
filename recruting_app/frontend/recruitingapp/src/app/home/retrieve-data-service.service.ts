@@ -85,6 +85,20 @@ export interface Recruit {
   languages?: Language[];
   schoolInstitutions?: SchoolInstitution[];
   salary: number;
+  experience?: number;
+}
+
+export interface User {
+  username: string;
+  firstname: string;
+  lastname: string;
+  role: Role;
+  token: string;
+}
+
+export enum Role {
+  User = 'User',
+  Admin = 'Admin'
 }
 
 export interface Certificate {

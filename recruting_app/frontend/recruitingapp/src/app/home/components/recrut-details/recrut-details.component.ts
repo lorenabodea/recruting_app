@@ -1,7 +1,7 @@
-import { ApiRequestsService } from './../../../core/api-requests.service';
+import { FeedbackComponent } from './feedback/feedback.component';
 import { Recruit } from './../../retrieve-data-service.service';
 import { Component, OnInit, Inject } from '@angular/core';
-import { MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialog } from '@angular/material/dialog';
 import { HttpClient } from '@angular/common/http';
 
 @Component({
@@ -11,34 +11,36 @@ import { HttpClient } from '@angular/common/http';
 })
 export class RecrutDetailsComponent implements OnInit {
 
-  constructor(@Inject(MAT_DIALOG_DATA) public recruit: Recruit,
-    private readonly apiRequestsService: ApiRequestsService,
-    private http: HttpClient) { }
+  constructor(
+    @Inject(MAT_DIALOG_DATA) public recruit: Recruit,
+    private http: HttpClient,
+    public dialog: MatDialog) { }
 
   public mailTo(): void {
     location.href = this.recruit.email;
   }
 
-  public removeRecruit(): void {
-    // this.apiRequestsService.delete('recruits/' + this.recruit.id).subscribe(
-    //   (res) => console.log(res)
-    // );
+  public emailRecruit(): void {
     const user = {
       firstname: this.recruit.firstName,
       lastname: this.recruit.lastName,
       email: this.recruit.email
     };
 
-    this.http.post("http://localhost:5000/sendmail", user).subscribe(
+    this.http.post('http://localhost:5000/sendmail', user).subscribe(
       data => {
-        let res: any = data;
-        console.log("trimis cu succes");
+        console.log('trimis cu succes');
       }
     );
   }
 
+  addFeedback(): void {
+      this.dialog.open(FeedbackComponent, {
+        data: this.recruit
+      });
+  }
+
   ngOnInit(): void {
-    console.log(this.recruit);
   }
 
 }

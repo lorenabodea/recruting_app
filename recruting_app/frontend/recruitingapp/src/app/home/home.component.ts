@@ -1,9 +1,12 @@
+import { AuthenticationService } from './../core/auth/authentication.service';
 import { Observable, combineLatest, Subject, BehaviorSubject } from 'rxjs';
 import { RetrieveDataServiceService, Certificate, Recruit } from './retrieve-data-service.service';
 import { RecrutDetailsComponent } from './components/recrut-details/recrut-details.component'; 2
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { map, shareReplay } from 'rxjs/operators';
+import { Router } from '@angular/router';
+import * as moment from 'moment';
 
 @Component({
   selector: 'app-home',
@@ -13,6 +16,7 @@ import { map, shareReplay } from 'rxjs/operators';
 export class HomeComponent implements OnInit {
 
   favourite = 1;
+  user = JSON.parse(localStorage.getItem('currentUser'));
 
   recruitsWithFields$ = combineLatest([
     this.dataService.recruits$,
@@ -31,6 +35,18 @@ export class HomeComponent implements OnInit {
         });
         return recruits;
       }),
+      map((recruits) => {
+        const currentYear = moment();
+        recruits.forEach(recruit => {
+          if (recruit.jobs && recruit.jobs.length > 0) {
+            const exp = moment(recruit.jobs[0].fromYear, 'YYYY');
+            recruit.experience = currentYear.diff(exp, 'years', false) ? currentYear.diff(exp, 'years', false) : 0;
+          } else {
+            recruit.experience = 0;
+          }
+        });
+        return recruits;
+      }),
       shareReplay(1)
     );
 
@@ -40,38 +56,50 @@ export class HomeComponent implements OnInit {
   private selectedOrderingSubject = new BehaviorSubject<number>(0);
   selectedOrderingAction$ = this.selectedOrderingSubject.asObservable();
 
+  private selectedSalarySubject = new BehaviorSubject<number>(0);
+  selectedSalaryAction$ = this.selectedSalarySubject.asObservable();
+
+  private selectedExperienceSubject = new BehaviorSubject<number>(0);
+  selectedExperienceAction$ = this.selectedExperienceSubject.asObservable();
+
   recruitsFilteredByFavourite$ = combineLatest([
     this.recruitsWithFields$,
     this.selectedFavouriteAction$,
+    this.selectedSalaryAction$,
+    this.selectedExperienceAction$,
     this.selectedOrderingAction$,
   ]).pipe(
-    map(([recruits1, favouriteSelection, ordering]) => {
+    map(([recruits1, favouriteSelection, salarySelection, experienceSection, ordering]) => {
       if (ordering === 1) {
         recruits1.sort(this.compareValues('salary', 'desc'));
       } else {
         recruits1.sort(this.compareValues('lastName', 'asc'));
 
       }
-      return recruits1.filter(recruit =>
-        favouriteSelection ? recruit.favourite === favouriteSelection : true);
+      return recruits1
+        .filter(recruit => favouriteSelection ? recruit.favourite === favouriteSelection : true)
+        .filter(recruit =>
+          (salarySelection === 1 ? recruit.salary < 3000 :
+            salarySelection === 2 ? recruit.salary >= 3000 && recruit.salary < 4000 :
+              salarySelection === 3 ? recruit.salary >= 4000 && recruit.salary < 5000 :
+                salarySelection === 4 ? recruit.salary > 5000 : true))
+        .filter(recruit =>
+          (experienceSection === 1 ? recruit.experience < 1 :
+            experienceSection === 2 ? recruit.experience >= 1 && recruit.salary < 3 :
+              experienceSection === 3 ? recruit.experience >= 3 && recruit.salary < 5 :
+                experienceSection === 4 ? recruit.experience > 5 : true)
+        );
     })
   );
 
-  recruitsFilteredByFavourite1$ = this.recruitsWithFields$.pipe(
-    map(recruits =>
-      recruits.filter(recruit =>
-        this.favourite ? recruit.favourite === this.favourite : true))
-  );
-
-  constructor(public dialog: MatDialog, public dataService: RetrieveDataServiceService) { }
+  constructor(
+    public dialog: MatDialog, public dataService: RetrieveDataServiceService,
+    private readonly authenticationService: AuthenticationService,
+    private readonly router: Router) { }
 
   public openDialog(recruit: Recruit): void {
-    const dialogRef = this.dialog.open(RecrutDetailsComponent, {
+    this.dialog.open(RecrutDetailsComponent, {
       data: recruit
-    });
-
-    dialogRef.afterClosed().subscribe(result => {
-      console.log(`Dialog result: ${result}`);
     });
   }
 
@@ -80,6 +108,13 @@ export class HomeComponent implements OnInit {
 
   filterByFavourite(favValue) {
     this.selectedFavouriteSubject.next(+favValue);
+  }
+
+  filterBySalary(salValue) {
+    this.selectedSalarySubject.next(+salValue);
+  }
+  filterByExperience(expValue) {
+    this.selectedExperienceSubject.next(+expValue);
   }
 
   order(value) {
@@ -108,6 +143,14 @@ export class HomeComponent implements OnInit {
         (order === 'desc') ? (comparison * -1) : comparison
       );
     };
+  }
+
+  logOut() {
+    this.authenticationService.logout();
+  }
+
+  goToForm() {
+    this.router.navigate(['user']);
   }
 
 }

@@ -1,23 +1,54 @@
 <div fxFlexOffset="4" fxLayout="column">
     <div fxLayout="row" fxLayoutAlign="space-between center" class="header">
-        <div fxFlexOffset="2">Hi, Andrei</div>
-        <div class="header-company">Microsoft</div>
+        <div fxFlexOffset="2">Hello, {{user['firstname']}}</div>
+        <div class="header-company">Apacks Trading</div>
+        <div fxLayoutGap="5px">
+            <button mat-raised-button (click)="goToForm()">Link formular</button>
+            <button mat-raised-button color="primary" (click)="logOut()">Delogare</button>
+        </div>
     </div>
-    <div fxFlexOffset="5"fxLayoutGap="20px">
-        <div fxFlexOffset="5"  fxLayoutGap="5px">
-            <label>Filtrare: </label>
+    <div fxFlexOffset="5" fxLayoutGap="20px">
+        <!-- <div fxFlexOffset="5"  fxLayoutGap="5px">
+            <label>Filtrare favoriti: </label>
             <select (change)="filterByFavourite($event.target.value)">
                 <option value="0">--Toti--</option>
                 <option value="1">Recruti favoriti</option>
             </select>
-        </div>
-        <div fxLayoutGap="5px" (change)="order($event.target.value)">
-            <label>Sortare: </label>
-            <select>
-                <option value="0">Alfabetic</option>
-                <option value="1">Descrescator asteptpari salariale</option>
-            </select>
-        </div>
+        </div> -->
+        <mat-form-field fxFlexOffset="5" fxLayoutGap="5px">
+            <mat-label>Filtrare favoriti:</mat-label>
+            <mat-select #choosedFav (valueChange)="filterByFavourite(choosedFav.value)">
+                <mat-option [value]="0">--Toti--</mat-option>
+                <mat-option [value]="1">Recruti favoriti</mat-option>
+            </mat-select>
+        </mat-form-field>
+        <mat-form-field fxLayoutGap="5px">
+            <mat-label>Filtrare salariu:</mat-label>
+            <mat-select #choosedSalary (valueChange)="filterBySalary(choosedSalary.value)">
+                <mat-option [value]="0">--Toti--</mat-option>
+                <mat-option [value]="1">&nbsp; < 3000 lei</mat-option>
+                <mat-option [value]="2">3001 - 4000 lei</mat-option>
+                <mat-option [value]="3">4001 - 5000 lei</mat-option>
+                <mat-option [value]="4">&nbsp; > 5000 lei</mat-option>
+            </mat-select>
+        </mat-form-field>
+        <mat-form-field fxLayoutGap="5px">
+            <mat-label>Filtrare experienta:</mat-label>
+            <mat-select #choosedExperience (valueChange)="filterByExperience(choosedExperience.value)">
+                <mat-option [value]="0">--Toti--</mat-option>
+                <mat-option [value]="1">&nbsp; < 1 an</mat-option>
+                <mat-option [value]="2">2 - 3 ani</mat-option>
+                <mat-option [value]="3">3 - 5 ani</mat-option>
+                <mat-option [value]="4">&nbsp; > 5 ani</mat-option>
+            </mat-select>
+        </mat-form-field>
+        <mat-form-field fxLayoutGap="5px">
+            <mat-label>Sortare:</mat-label>
+            <mat-select #choosedSort (valueChange)="order(choosedSort.value)">
+                <mat-option [value]="0">Alfabetic</mat-option>
+                <mat-option [value]="1">Descrescator asteptari salariale</mat-option>
+            </mat-select>
+        </mat-form-field>
     </div>
     <div fxFlexOffset="5" fxLayoutGap="50px" class="parent" fxLayout="row wrap" fxLayoutAlign="space-around center">
         <div class="user-card" fxFlex.gt-sm="1 0 21%" *ngFor="let rectruit of recruitsFilteredByFavourite$ | async;">

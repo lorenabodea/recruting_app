@@ -22,7 +22,7 @@
         <div class="form-group">
           <mat-label>Data nasterii</mat-label>
           <div fxLayout="row">
-            <input class="form-control" [matDatepicker]="picker">
+            <input class="form-control" [matDatepicker]="picker" required>
             <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
             <mat-datepicker #picker></mat-datepicker>
           </div>

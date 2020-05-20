@@ -3,6 +3,10 @@ const router = express.Router();
 const userService = require('../services/user.service');
 const authorize = require('../../_helpers/authorize')
 const Role = require('../../_helpers/role');
+var dbConn = require('../../config/db.config');
+
+const config = require('../../config/configAuth.json');
+const jwt = require('jsonwebtoken');
 
 // routes
 router.post('/authenticate', authenticate);     // public route
@@ -10,11 +14,34 @@ router.get('/', authorize(Role.Admin), getAll); // admin only
 router.get('/:id', authorize(), getById);       // all authenticated users
 module.exports = router;
 
-function authenticate(req, res, next) {
-    userService.authenticate(req.body)
-        .then(user => user ? res.json(user) : res.status(400).json({ message: 'Username or password is incorrect' }))
-        .catch(err => next(err));
+function authenticate(req, response, next) {
+    let username = req.body.username;
+    let password = req.body.password;
+    dbConn.query("Select * from users", function (err, res) {
+        let users;
+        if (err) {
+            console.log("error: ", err);
+            return null;
+        }
+        else {
+            users = res;
+            const index = users.findIndex(u => u.username === username && u.password === password);
+            let user = users[index];
+            if (user) {
+                const token = jwt.sign({ sub: user.id, role: user.role }, config.secret);
+                const { password, ...userWithoutPassword } = user;
+                console.log(userWithoutPassword);
+                response.json({
+                    ...userWithoutPassword,
+                    token
+                })  
+            } else {
+                response.status(400).json({ message: 'Username or password is incorrect' })
+            }
+        }
+    });
 }
+
 
 function getAll(req, res, next) {
     userService.getAll()

@@ -7,8 +7,7 @@ import { AngularFireModule } from '@angular/fire';
 import { AngularFirestoreModule } from '@angular/fire/firestore';
 import { AngularFireStorageModule } from '@angular/fire/storage';
 import { AngularFireAuthModule } from '@angular/fire/auth';
-import { RouterModule } from '@angular/router';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 
 import { HomeComponent } from './home/home.component';
 import { FlexLayoutModule } from '@angular/flex-layout';
@@ -24,9 +23,17 @@ import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
-import {MatIconModule} from '@angular/material/icon';
+import { MatIconModule } from '@angular/material/icon';
+import { ToastrModule } from 'ngx-toastr';
+import { MatSelectModule } from '@angular/material/select';
 import { FavouriteButtonComponent } from './home/components/recrut-details/favourite-button/favourite-button.component';
 import { LoginComponent } from './core/login/login/login.component';
+
+import { routing } from './app.routing';
+
+import { JwtInterceptor } from './_helpers/jwt.interceptor';
+import { AuthGuard } from './auth.guard';
+import { FeedbackComponent } from './home/components/recrut-details/feedback/feedback.component';
 
 const firebaseConfig = {
   apiKey: 'AIzaSyCWR_39P8u2NgrZyeJAVqBrqeu04Hy_v1s',
@@ -47,9 +54,11 @@ const firebaseConfig = {
     RecrutDetailsComponent,
     UserInterfaceComponent,
     FavouriteButtonComponent,
-    LoginComponent
+    LoginComponent,
+    FeedbackComponent
   ],
   imports: [
+    routing,
     BrowserModule,
     AngularFireModule.initializeApp(firebaseConfig),
     AngularFirestoreModule, // firestore
@@ -69,16 +78,35 @@ const firebaseConfig = {
     MatFormFieldModule,
     MatInputModule,
     MatIconModule,
-    RouterModule.forRoot([
-        { path: '', redirectTo: '/home', pathMatch: 'full' },
-      { path: 'home', component: HomeComponent },
-      { path: 'user', component: UserInterfaceComponent },
-      { path: 'login', component: LoginComponent }
-    ]),
-   ],
+    MatSelectModule,
+    ToastrModule.forRoot(),
+    // RouterModule.forRoot([
+    //   { path: '', redirectTo: 'home', pathMatch: 'full' },
+    //   {
+    //     path: 'home',
+    //     component: HomeComponent,
+    //     canActivate: [AuthGuard],
+    //     data: { roles: [Role.Admin] }
+    //   },
+    //   {
+    //     path: 'user',
+    //     component: UserInterfaceComponent
+    //   },
+    //   {
+    //     path: 'login',
+    //     component: LoginComponent
+    //   },
+    //   {
+    //     path: '**', redirectTo: ''
+    //   }
+    // ]),
+  ],
 
-  providers: [MatNativeDateModule],
+  providers: [MatNativeDateModule,
+    { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
+    AuthGuard,
+  ],
   bootstrap: [AppComponent],
-  entryComponents: [RecrutDetailsComponent]
+  entryComponents: [RecrutDetailsComponent, FeedbackComponent]
 })
 export class AppModule { }

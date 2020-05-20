@@ -15,7 +15,7 @@ app.use(uploader());
 
 app.use(function (req, res, next) {
   res.header("Access-Control-Allow-Origin", '*');
-  res.header("Access-Control-Allow-Headers", "Content-Type");
+  res.header("Access-Control-Allow-Headers", "Content-Type, Authorization");
   res.header("Access-Control-Allow-Credentials", "true");
   res.header("Access-Control-Allow-Methods", "PUT");
   next();
@@ -62,6 +62,7 @@ const certificateRoutes = require('./src/routes/certificate.routes');
 const jobRoutes = require('./src/routes/job.route');
 const languageRoutes = require('./src/routes/language.route');
 const school_institutionRoutes = require('./src/routes/school_institutution.route');
+const feedbackRoutes = require('./src/routes/feedback.routes');
 // using as middleware
 // api routes
 app.use('/users', require('./src/controllers/user.controller'));
@@ -70,6 +71,7 @@ app.use('/api/v1/certificates', certificateRoutes)
 app.use('/api/v1/jobs', jobRoutes)
 app.use('/api/v1/languages', languageRoutes)
 app.use('/api/v1/school_institutions', school_institutionRoutes)
+app.use('/api/v1/feedback', feedbackRoutes);
 // listen for requests
 app.listen(port, () => {
   console.log(`Server is listening on port ${port}`);

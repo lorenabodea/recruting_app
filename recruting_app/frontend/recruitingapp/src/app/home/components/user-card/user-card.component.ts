@@ -16,7 +16,6 @@ export class UserCardComponent implements OnInit {
   constructor() { }
 
   ngOnInit(): void {
-    console.log(this.recruit);
     this.lastJob = this.recruit.jobs.length > 0 ? this.recruit.jobs.pop().position : 'unemployed';
     this.imagepath = '../../../../assets/profile-images/'
      + this.recruit.email.split('@')[0] + '.png';

@@ -121,9 +121,14 @@
         <div>{{recruit.salary}}</div>
       </div>
     </div>
-    <button type="button" title="email the recruit" rel="tooltip" class="btn btn-success btn-sm btn-icon" (click)="removeRecruit()">
+    <button type="button" title="email the recruit" rel="tooltip" class="btn btn-success btn-sm btn-icon" (click)="emailRecruit()">
       <i class="material-icons">
         email
+      </i>
+    </button>
+    <button type="button" title="add feedback" rel="tooltip" class="btn btn-success btn-sm btn-icon" (click)="addFeedback()">
+      <i class="material-icons">
+        add_comment
       </i>
     </button>
     <app-favourite-button [recruit]="recruit"></app-favourite-button>

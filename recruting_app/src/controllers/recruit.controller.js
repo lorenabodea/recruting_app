@@ -4,15 +4,10 @@ const Certificate = require('../models/certificate.model');
 const Job = require('../models/job.model');
 const Language = require('../models/language.model');
 const SchoolInstitution = require('../models/school_institution.model');
-const userFiles = 'src/public/images/profiles/';
-const fs = require('fs');
-const config = require('../../config/configAuth.json');
-const jwt = require('jsonwebtoken');
-const Role = require('../../_helpers/role');
 const path = require("path");
 
 exports.findAll = function (req, res) {
-  Recruit.findAll(function (err, recruit) {
+  Recruit.findAll(function (err, recruit) {  
     console.log('controller')
     if (err)
       res.send(err);
@@ -26,7 +21,6 @@ exports.create = function (req, res) {
   if (req.body.constructor === Object && Object.keys(req.body).length === 0) {
     res.status(400).send({ error: true, message: 'Please provide all required field' });
   } else {
-    console.log(req.body);
     const new_recruit = new Recruit({
       first_name: req.body.firstname,
       last_name: req.body.lastname,
