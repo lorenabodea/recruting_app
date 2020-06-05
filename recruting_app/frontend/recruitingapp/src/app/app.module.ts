@@ -8,6 +8,7 @@ import { AngularFirestoreModule } from '@angular/fire/firestore';
 import { AngularFireStorageModule } from '@angular/fire/storage';
 import { AngularFireAuthModule } from '@angular/fire/auth';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
+import { CommonModule } from '@angular/common';
 
 import { HomeComponent } from './home/home.component';
 import { FlexLayoutModule } from '@angular/flex-layout';
@@ -79,6 +80,7 @@ const firebaseConfig = {
     MatInputModule,
     MatIconModule,
     MatSelectModule,
+    CommonModule,
     ToastrModule.forRoot(),
     // RouterModule.forRoot([
     //   { path: '', redirectTo: 'home', pathMatch: 'full' },

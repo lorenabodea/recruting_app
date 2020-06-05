@@ -23,15 +23,18 @@ export class HomeComponent implements OnInit {
     this.dataService.jobs$,
     this.dataService.certificates$,
     this.dataService.languages$,
-    this.dataService.schools$
+    this.dataService.schools$,
+    this.dataService.feedbacks$
   ])
     .pipe(
-      map(([recruits, jobsResponse, certificatesResponse, languagesResponse, schoolsResponse]) => {
+      map(([recruits, jobsResponse, certificatesResponse,
+        languagesResponse, schoolsResponse, feedbacksResponse]) => {
         recruits.forEach(recruit => {
           recruit.certificates = certificatesResponse.filter(certificate => certificate.userId === recruit.id);
           recruit.jobs = jobsResponse.filter(job => job.userId === recruit.id);
           recruit.languages = languagesResponse.filter(language => language.userId === recruit.id);
           recruit.schoolInstitutions = schoolsResponse.filter(school => school.userId === recruit.id);
+          recruit.feedback = feedbacksResponse.filter(feedback => feedback.userId === recruit.id);
         });
         return recruits;
       }),

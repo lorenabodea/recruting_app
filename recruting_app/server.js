@@ -27,12 +27,26 @@ app.get('/', (req, res) => {
 
 app.post("/sendmail", (req, res) => {
   let user = req.body;
-  sendEmail(user, info => {
+  sendEmailAppointment(user, info => {
     res.send(info);
   });
 });
 
-async function sendEmail(user, callback) {
+app.post("/sendmailaccept", (req, res) => {
+  let user = req.body;
+  sendEmailAccept(user, info => {
+    res.send(info);
+  });
+});
+
+app.post("/sendmailreject", (req, res) => {
+  let user = req.body;
+  sendEmailReject(user, info => {
+    res.send(info);
+  });
+});
+
+async function sendEmailAppointment(user, callback) {
   //create reusable transport object using the default smtp transport
   let transporter = nodemailer.createTransport({
     service: 'gmail',
@@ -56,6 +70,52 @@ async function sendEmail(user, callback) {
   callback(info);
 }
 
+async function sendEmailAccept(user, callback) {
+  //create reusable transport object using the default smtp transport
+  let transporter = nodemailer.createTransport({
+    service: 'gmail',
+    auth: {
+      user: 'rapplication4@gmail.com',
+      pass: 's3curep@ssw0rd'
+    }
+  });
+
+  let mailOptions = {
+    from: "microsoft",
+    to: "lorenabodea@gmail.com",
+    subject: "Raspuns pozitiv ApacksTrading",
+    html: `<h1>Buna, ${user.firstname}!</h1><br>
+    <h4>Vesti bune!</h4>
+    <p>In urma interviului ai primit un feedback pozitiv si ne-ar placea sa te alaturi echipei noastre!</p>
+    <h5>Numai bine! Ne auzim curand pentru ultimele detalii</h5>`
+  };
+
+  let info = await transporter.sendMail(mailOptions);
+  callback(info);
+}
+
+async function sendEmailReject(user, callback) {
+  //create reusable transport object using the default smtp transport
+  let transporter = nodemailer.createTransport({
+    service: 'gmail',
+    auth: {
+      user: 'rapplication4@gmail.com',
+      pass: 's3curep@ssw0rd'
+    }
+  });
+
+  let mailOptions = {
+    from: "microsoft",
+    to: "lorenabodea@gmail.com",
+    subject: "Raspuns Negativ Apacks Trading",
+    html: `<h1>Buna, ${user.firstname}!</h1><br>
+    <p>Din pacate nu vom cntinua impreuna in procesul de recrutare</p>
+    <h5>Mult succes!</h5>`
+  };
+
+  let info = await transporter.sendMail(mailOptions);
+  callback(info);
+}
 // Require recruit routes
 const recruitRoutes = require('./src/routes/recruit.routes');
 const certificateRoutes = require('./src/routes/certificate.routes');

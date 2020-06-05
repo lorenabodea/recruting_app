@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, Subject, BehaviorSubject } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 @Injectable({
@@ -8,8 +8,8 @@ import { map } from 'rxjs/operators';
 })
 export class RetrieveDataServiceService {
 
-  constructor(private http: HttpClient) { }
-
+  public feedbackObservable$!: Observable<Feedback[]>;
+  public feedbackSubject = new BehaviorSubject<Feedback[]>(null);
 
   recruits$: Observable<Recruit[]> = this.http.get<any>('http://localhost:5000/api/v1/recruits/').pipe(
     map((recruits) => {
@@ -69,6 +69,19 @@ export class RetrieveDataServiceService {
     })
   );
 
+ feedbacks$ = this.http.get<Feedback[]>('http://localhost:5000/api/v1/feedback/').pipe(
+    map((response) => {
+      return response.map(feedback => ({
+        userId: feedback['recruit_id'],
+        feedback: feedback['feedback'],
+      }) as Feedback);
+    })
+  );
+
+  constructor(private http: HttpClient) { 
+    // this.feedbacks$ = this.feedbackSubject.asObservable();
+  }
+
 }
 
 export interface Recruit {
@@ -86,6 +99,7 @@ export interface Recruit {
   schoolInstitutions?: SchoolInstitution[];
   salary: number;
   experience?: number;
+  feedback?: Feedback[];
 }
 
 export interface User {
@@ -123,4 +137,9 @@ export interface SchoolInstitution {
   name: string;
   fromYear: string;
   toYear: string;
+}
+
+export interface Feedback {
+  userId: number;
+  feedback: string;
 }

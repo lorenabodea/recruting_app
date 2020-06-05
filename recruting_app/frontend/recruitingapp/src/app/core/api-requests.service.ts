@@ -13,5 +13,5 @@ export class ApiRequestsService {
 
   public delete(path: string): Observable<unknown> {
     return this.http.delete(this.baseURL + path);
-}
+  }
 }

@@ -116,7 +116,7 @@ export class UserInterfaceComponent implements OnInit {
     const constoptions = { positionClass:'toast-custom' };
 
     if (values['firstname'] === '') {
-      this.toastr.success('Numele trebuie completat', 'Camp obligatoriu')
+      this.toastr.error('Numele trebuie completat', 'Camp obligatoriu')
       return 0;
     }
 

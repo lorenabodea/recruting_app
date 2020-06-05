@@ -120,17 +120,29 @@
         <div>Asteptari salariale: </div>
         <div>{{recruit.salary}}</div>
       </div>
+      <h4 *ngIf="(feedbacks$ | async).length > 0" class="card-title">Feedback:</h4>
+      <div *ngIf="(feedbacks$ | async).length > 0" class="field-container">
+        <div fxLayout="column" *ngFor="let feedback of (feedbacks$ | async)">
+          <div>{{feedback.feedback}}</div>
+        </div>
+      </div>
     </div>
-    <button type="button" title="email the recruit" rel="tooltip" class="btn btn-success btn-sm btn-icon" (click)="emailRecruit()">
-      <i class="material-icons">
-        email
-      </i>
-    </button>
-    <button type="button" title="add feedback" rel="tooltip" class="btn btn-success btn-sm btn-icon" (click)="addFeedback()">
-      <i class="material-icons">
-        add_comment
-      </i>
-    </button>
-    <app-favourite-button [recruit]="recruit"></app-favourite-button>
+    <div fxLayout="row" fxLayoutAlign="space-evenly center" >
+      <button type="button" title="email the recruit" rel="tooltip" class="btn btn-success btn-sm btn-icon" (click)="emailRecruit()">
+        <i class="material-icons">
+          email
+        </i>
+      </button>
+      <button type="button" title="add feedback" rel="tooltip" class="btn btn-success btn-sm btn-icon" (click)="addFeedback()">
+        <i class="material-icons">
+          add_comment
+        </i>
+      </button>
+      <app-favourite-button [recruit]="recruit"></app-favourite-button>
+    </div>
+   <div>
+     <button type="button" class="btn btn-info" (click)="emailAccept()">Accepta</button>
+     <button type="button" class="btn btn-danger" (click)="emailReject()">Refuza</button>
+   </div>
   </div>
 </div>
