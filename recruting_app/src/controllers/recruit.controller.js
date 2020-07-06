@@ -29,7 +29,9 @@ exports.create = function (req, res) {
       birthday: req.body.birthday,
       photo: 'location',
       favourite: 0,
-      salary_expectation: req.body.salary
+      salary_expectation: req.body.salary ? req.body.salary : 0,
+      display: 0,
+      jobToApplyFor: req.body.jobToApplyFor
     });
 
     Recruit.create(new_recruit, function (err, recruit) {
@@ -157,6 +159,15 @@ exports.setFavourite = function (req, res) {
     if (err)
       res.send(err);
     res.json({ error: false, message: 'Recruit successfully set as favourite' });
+  });
+};
+
+exports.display = function (req, res) {
+  console.log('controller');
+  Recruit.setDisplay(req.params.id, req.body.val, function (err, recruit) {
+    if (err)
+      res.send(err);
+    res.json({ error: false, message: 'Recruit successfully set as displayed' });
   });
 };
 

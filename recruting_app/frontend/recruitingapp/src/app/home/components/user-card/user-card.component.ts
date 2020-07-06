@@ -10,15 +10,32 @@ import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
 export class UserCardComponent implements OnInit {
   public lastJob: string = '';
   public imagepath: string = '../../../../assets/profile.png';
+  public jobToApplyFor: string;
 
   @Input() recruit: Recruit;
 
   constructor() { }
 
   ngOnInit(): void {
-    this.lastJob = this.recruit.jobs.length > 0 ? this.recruit.jobs.pop().position : 'unemployed';
-    this.imagepath = '../../../../assets/profile-images/'
-     + this.recruit.email.split('@')[0] + '.png';
+   // this.lastJob = this.recruit.jobs.length > 0 ? this.recruit.jobs[this.recruit.jobs.length - 1].position : 'unemployed';
+   this.jobToApplyFor = this.recruit.jobToApplyFor;
+   if(this.recruit.jobs.length > 0) {
+      for(let job of this.recruit.jobs) {
+        if(!job.toYear) {
+          job.toYear = '2020';
+        }
+      }
+    }
+    if(this.recruit.schoolInstitutions.length > 0) {
+      for(let school of this.recruit.schoolInstitutions) {
+        if(!school.toYear) {
+          school.toYear = '2020';
+        }
+      }
+    }
+    console.log(this.recruit);
+    // this.imagepath = '../../../../assets/profile-images/'
+    //  + this.recruit.email.split('@')[0] + '.png';
   }
 
 }

@@ -109,7 +109,7 @@ async function sendEmailReject(user, callback) {
     to: "lorenabodea@gmail.com",
     subject: "Raspuns Negativ Apacks Trading",
     html: `<h1>Buna, ${user.firstname}!</h1><br>
-    <p>Din pacate nu vom cntinua impreuna in procesul de recrutare</p>
+    <p>Din pacate nu vom continua impreuna in procesul de recrutare</p>
     <h5>Mult succes!</h5>`
   };
 

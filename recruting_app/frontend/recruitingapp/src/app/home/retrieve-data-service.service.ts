@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, Subject, BehaviorSubject } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { map, filter } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -12,6 +12,9 @@ export class RetrieveDataServiceService {
   public feedbackSubject = new BehaviorSubject<Feedback[]>(null);
 
   recruits$: Observable<Recruit[]> = this.http.get<any>('http://localhost:5000/api/v1/recruits/').pipe(
+    // map((respose) => {
+    //  return respose.filter(recruit => recruit['display'] !== 0)
+    // }),
     map((recruits) => {
       return recruits.map(recruit => ({
         id: recruit['id'],
@@ -22,7 +25,9 @@ export class RetrieveDataServiceService {
         phone: recruit['phone'],
         photo: recruit['photo'],
         favourite: recruit['favourite'],
-        salary: recruit['salary_expectation']
+        salary: recruit['salary_expectation'],
+        display: recruit['display'],
+        jobToApplyFor : recruit['jobToApplyFor']
       }) as Recruit);
     })
   );
@@ -69,7 +74,7 @@ export class RetrieveDataServiceService {
     })
   );
 
- feedbacks$ = this.http.get<Feedback[]>('http://localhost:5000/api/v1/feedback/').pipe(
+  feedbacks$ = this.http.get<Feedback[]>('http://localhost:5000/api/v1/feedback/').pipe(
     map((response) => {
       return response.map(feedback => ({
         userId: feedback['recruit_id'],
@@ -78,7 +83,7 @@ export class RetrieveDataServiceService {
     })
   );
 
-  constructor(private http: HttpClient) { 
+  constructor(private http: HttpClient) {
     // this.feedbacks$ = this.feedbackSubject.asObservable();
   }
 
@@ -100,6 +105,8 @@ export interface Recruit {
   salary: number;
   experience?: number;
   feedback?: Feedback[];
+  display?: number;
+  jobToApplyFor?: string;
 }
 
 export interface User {

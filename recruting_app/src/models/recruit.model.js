@@ -10,6 +10,8 @@ var Recruit = function (recruit) {
   this.photo = recruit.photo;
   this.favourite = recruit.favourite;
   this.salary_expectation = recruit.salary_expectation;
+  this.display = recruit.display;
+  this.jobToApplyFor = recruit.jobToApplyFor;
 };
 Recruit.create = function (newRecruit, result) {
   dbConn.query("INSERT INTO recruits set ?", newRecruit, function (err, res) {
@@ -58,6 +60,16 @@ Recruit.update = function (id, photo, result) {
 };
 Recruit.setFavourite = function (id, value, result) {
   dbConn.query("UPDATE recruits SET favourite=? WHERE id = ?", [value, id], function (err, res) {
+    if (err) {
+      console.log("error: ", err);
+      result(null, err);
+    } else {
+      result(null, res);
+    }
+  });
+};
+Recruit.setDisplay = function (id, value, result) {
+  dbConn.query("UPDATE recruits SET display=? WHERE id = ?", [value, id], function (err, res) {
     if (err) {
       console.log("error: ", err);
       result(null, err);

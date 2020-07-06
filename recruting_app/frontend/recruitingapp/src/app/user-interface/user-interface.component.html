@@ -17,12 +17,12 @@
         </div>
         <div class="form-group">
           <label> Telefon </label>
-          <input class="form-control" formControlName="phone" type="text">
+          <input class="form-control" formControlName="phone" type="text" (keypress)="numberOnly($event)">
         </div>
         <div class="form-group">
           <mat-label>Data nasterii</mat-label>
           <div fxLayout="row">
-            <input class="form-control" [matDatepicker]="picker" required>
+            <input class="form-control" [matDatepicker]="picker" [min]="minDate" [max]="maxDate" required>
             <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
             <mat-datepicker #picker></mat-datepicker>
           </div>
@@ -31,46 +31,59 @@
           <span>Select Image</span>
           <input #userImage formControlName="photo" type="file" accept="image/*" (change)="uploadFile($event)">
         </label>
+        <div style="padding-top: 20px;" class="form-group">
+        <mat-form-field formControlName="jobToApplyFor" appearance="fill">
+          <mat-label>Postul pentru care aplicati</mat-label>
+          <mat-select #jobss (selectionChange)="onSelectJob(jobss.value)">
+            <mat-option *ngFor="let job of companyJobs" [value]="job.value">
+              {{job.viewValue}}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
         <div class="form-group">
           <label> Asteptari salariale </label>
-          <input class="form-control" formControlName="salary" type="text">
+          <input class="form-control" formControlName="salary" type="text" (keypress)="numberOnly($event)">
         </div>
         <h2>Educatie</h2>
         <div formArrayName="institutions">
-          <div fxLayout="row" fxLayoutGap="10px" *ngFor="let item of institutions.controls; let pointIndex=index, let first=first"
+          <div fxLayout="row" fxLayoutGap="10px"
+            *ngFor="let item of institutions.controls; let pointIndex=index, let first=first"
             [formGroupName]="pointIndex">
             <div class="form-group">
               <label> Institutie </label>
               <input class="form-control" formControlName="institution" type="text">
             </div>
             <div class="form-group">
-              <label> Din anul:  </label>
-              <input class="form-control" formControlName="from" type="text">
+              <label> Din anul: </label>
+              <input class="form-control" formControlName="from" type="text" (keypress)="numberOnly($event)">
             </div>
             <div class="form-group">
-              <label> Pana in anul:  </label>
-              <input class="form-control" formControlName="to" type="text">
+              <label> Pana in anul: </label>
+              <input class="form-control" formControlName="to" type="text" (keypress)="numberOnly($event)">
             </div>
-            <button type="button" *ngIf="!first" mat-stroked-button color="warn" (click)="deleteInstitution(pointIndex)"> -
+            <button type="button" *ngIf="!first" mat-stroked-button color="warn"
+              (click)="deleteInstitution(pointIndex)"> -
               Sterge institutie</button>
           </div>
-          <button type="button" mat-stroked-button color="primary" (click)="addInstitution()"> + Adauga institutie</button>
+          <button type="button" mat-stroked-button color="primary" (click)="addInstitution()"> + Adauga
+            institutie</button>
         </div>
         <h2>Locuri de munca</h2>
         <div formArrayName="jobs">
-          <div  fxLayout="row" fxLayoutGap="10px" *ngFor="let item of jobs.controls; let jobIndex=index, let first=first"
+          <div fxLayout="row" fxLayoutGap="10px" *ngFor="let item of jobs.controls; let jobIndex=index, let first=first"
             [formGroupName]="jobIndex">
             <div class="form-group">
               <label> Job </label>
               <input class="form-control" formControlName="job" type="text">
             </div>
             <div class="form-group">
-              <label> Din anul:  </label>
-              <input class="form-control" formControlName="fromJob" type="text">
+              <label> Din anul: </label>
+              <input class="form-control" formControlName="fromJob" type="text" (keypress)="numberOnly($event)">
             </div>
             <div class="form-group">
-              <label> Pana in anul:  </label>
-              <input class="form-control" formControlName="toJob" type="text">
+              <label> Pana in anul: </label>
+              <input class="form-control" formControlName="toJob" type="text" (keypress)="numberOnly($event)">
             </div>
             <button type="button" *ngIf="!first" mat-stroked-button color="warn" (click)="deleteJob(jobIndex)"> - Sterge
               job</button>
@@ -81,7 +94,8 @@
           <div fxLayout="column">
             <h2>Certificari</h2>
             <div formArrayName="certificates">
-              <div fxLayoutGap="10px" *ngFor="let item of certificates.controls; let certificateIndex=index, let first=first"
+              <div fxLayoutGap="10px"
+                *ngFor="let item of certificates.controls; let certificateIndex=index, let first=first"
                 [formGroupName]="certificateIndex">
                 <div class="form-group">
                   <label> Denumire </label>
@@ -90,7 +104,8 @@
                 <button type="button" *ngIf="!first" mat-stroked-button color="warn"
                   (click)="deleteCertificate(certificateIndex)"> - Sterge certificat</button>
               </div>
-              <button type="button" mat-stroked-button color="primary" (click)="addCertificate()"> + Adauga certificat</button>
+              <button type="button" mat-stroked-button color="primary" (click)="addCertificate()"> + Adauga
+                certificat</button>
             </div>
           </div>
           <div fxLayout.lg="column">
@@ -102,10 +117,12 @@
                   <label> Limba </label>
                   <input class="form-control" formControlName="language" type="text">
                 </div>
-                <button type="button" *ngIf="!first" mat-stroked-button color="warn" (click)="deleteLanguage(languageIndex)"> -
+                <button type="button" *ngIf="!first" mat-stroked-button color="warn"
+                  (click)="deleteLanguage(languageIndex)"> -
                   Sterge certificat</button>
               </div>
-              <button type="button" mat-stroked-button color="primary" (click)="addLanguage()"> + Adauga certificat</button>
+              <button type="button" mat-stroked-button color="primary" (click)="addLanguage()"> + Adauga
+                certificat</button>
             </div>
           </div>
         </div>

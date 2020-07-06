@@ -27,8 +27,8 @@
             <mat-select #choosedSalary (valueChange)="filterBySalary(choosedSalary.value)">
                 <mat-option [value]="0">--Toti--</mat-option>
                 <mat-option [value]="1">&nbsp; < 3000 lei</mat-option>
-                <mat-option [value]="2">3001 - 4000 lei</mat-option>
-                <mat-option [value]="3">4001 - 5000 lei</mat-option>
+                <mat-option [value]="2">3000 - 4000 lei</mat-option>
+                <mat-option [value]="3">4000 - 5000 lei</mat-option>
                 <mat-option [value]="4">&nbsp; > 5000 lei</mat-option>
             </mat-select>
         </mat-form-field>
@@ -37,7 +37,7 @@
             <mat-select #choosedExperience (valueChange)="filterByExperience(choosedExperience.value)">
                 <mat-option [value]="0">--Toti--</mat-option>
                 <mat-option [value]="1">&nbsp; < 1 an</mat-option>
-                <mat-option [value]="2">2 - 3 ani</mat-option>
+                <mat-option [value]="2">1 - 3 ani</mat-option>
                 <mat-option [value]="3">3 - 5 ani</mat-option>
                 <mat-option [value]="4">&nbsp; > 5 ani</mat-option>
             </mat-select>

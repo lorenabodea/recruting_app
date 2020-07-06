@@ -24,7 +24,8 @@
 
             <h5 class=" title">{{recruit.firstName}}&nbsp;{{recruit.lastName}}</h5>
           </a>
-          <p class=" description">{{lastJob}}</p>
+          <p class=" description">{{jobToApplyFor}}</p>
+          <p class=" description">{{recruit.salary}}&nbsp;RON</p>
           <app-favourite-button [disabled]="true" [recruit]="recruit"></app-favourite-button>
         </div>
       </div>

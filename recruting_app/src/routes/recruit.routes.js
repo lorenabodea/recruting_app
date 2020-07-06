@@ -13,4 +13,6 @@ router.put('/:id', recruitController.update);
 router.delete('/:id', recruitController.delete);
 //set as favourite
 router.put('/setfavourite/:id', recruitController.setFavourite);
+//set display
+router.put('/display/:id', recruitController.display);
 module.exports = router

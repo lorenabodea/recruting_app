@@ -1,7 +1,7 @@
 import { FeedbackComponent } from './feedback/feedback.component';
 import { Recruit, RetrieveDataServiceService, Feedback } from './../../retrieve-data-service.service';
 import { Component, OnInit, Inject } from '@angular/core';
-import { MAT_DIALOG_DATA, MatDialog } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { HttpClient } from '@angular/common/http';
 import { Subject, Observable, of } from 'rxjs';
 import { ToastrService } from 'ngx-toastr';
@@ -23,7 +23,8 @@ export class RecrutDetailsComponent implements OnInit {
     private http: HttpClient,
     public dialog: MatDialog,
     public dataService: RetrieveDataServiceService,
-    private toastr: ToastrService) {
+    private toastr: ToastrService,
+    private readonly dialogRef: MatDialogRef<RecrutDetailsComponent>) {
   }
 
   public mailTo(): void {
@@ -34,6 +35,7 @@ export class RecrutDetailsComponent implements OnInit {
     this.http.post('http://localhost:5000/sendmail', this.user).subscribe(
       () => {
         this.toastr.success('Mail trimis cu succes!')
+          this.dialogRef.close();
       }
     );
   }
@@ -41,18 +43,27 @@ export class RecrutDetailsComponent implements OnInit {
   public emailAccept() {
     this.http.post('http://localhost:5000/sendmailaccept', this.user).subscribe(
       () => {
-        this.toastr.success('Mail trimis cu succes!')
+        this.toastr.success('Mail accept trimis cu succes!');
+        this.dialogRef.close();
       }
     );
+
+    this.http.put<any>('http://localhost:5000/api/v1/recruits/display/' + this.recruit.id, { val: 1 }).subscribe();
+
   }
 
   public emailReject() {
     this.http.post('http://localhost:5000/sendmailreject', this.user).subscribe(
       () => {
-        this.toastr.success('Mail trimis cu succes!')
+        this.toastr.success('Mail respins trimis cu succes!');
+        this.dialogRef.close();
       }
     );
+
+    this.http.put<any>('http://localhost:5000/api/v1/recruits/display/' + this.recruit.id, { val: -1 }).subscribe();
+    console.log(this.recruit.id)
   }
+
 
   addFeedback(): void {
     this.dialog.open(FeedbackComponent, {
