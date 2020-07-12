@@ -58,7 +58,7 @@ async function sendEmailAppointment(user, callback) {
 
   let mailOptions = {
     from: "microsoft",
-    to: "lorenabodea@gmail.com",
+    to: user.email,
     subject: "Programare interviu",
     html: `<h1>Buna, ${user.firstname}!</h1><br>
     <h4>Ne-am bucura sa ne vedem la un interviu pentru postul la care ai aplicat la Microsoft.</h4>

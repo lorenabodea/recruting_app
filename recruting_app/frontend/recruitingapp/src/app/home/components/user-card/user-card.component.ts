@@ -17,25 +17,25 @@ export class UserCardComponent implements OnInit {
   constructor() { }
 
   ngOnInit(): void {
-   // this.lastJob = this.recruit.jobs.length > 0 ? this.recruit.jobs[this.recruit.jobs.length - 1].position : 'unemployed';
-   this.jobToApplyFor = this.recruit.jobToApplyFor;
-   if(this.recruit.jobs.length > 0) {
-      for(let job of this.recruit.jobs) {
-        if(!job.toYear) {
+    // this.lastJob = this.recruit.jobs.length > 0 ? this.recruit.jobs[this.recruit.jobs.length - 1].position : 'unemployed';
+    this.jobToApplyFor = this.recruit.jobToApplyFor;
+    if (this.recruit.jobs.length > 0) {
+      for (const job of this.recruit.jobs) {
+        if (!job.toYear) {
           job.toYear = '2020';
         }
       }
     }
-    if(this.recruit.schoolInstitutions.length > 0) {
-      for(let school of this.recruit.schoolInstitutions) {
-        if(!school.toYear) {
+    if (this.recruit.schoolInstitutions.length > 0) {
+      for (const school of this.recruit.schoolInstitutions) {
+        if (!school.toYear) {
           school.toYear = '2020';
         }
       }
     }
-    console.log(this.recruit);
-    // this.imagepath = '../../../../assets/profile-images/'
-    //  + this.recruit.email.split('@')[0] + '.png';
+    // console.log(this.recruit);
+    this.imagepath = '../../../../assets/profile-images/'
+      + this.recruit.email.split('@')[0] + '.png';
   }
 
 }

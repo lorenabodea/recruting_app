@@ -13,7 +13,6 @@ import { ToastrService } from 'ngx-toastr';
 })
 export class RecrutDetailsComponent implements OnInit {
 
-  private feedbackSubject = new Subject<Feedback[]>();
   public feedbacks$!: Observable<Feedback[]>;
   public user;
 
